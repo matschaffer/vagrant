@@ -134,15 +134,17 @@ module Vagrant
     end
 
     def reload!
+      #driver_class = Driver::VirtualBox
+      driver_class = Driver::VMWareFusion
       begin
-        @driver = Driver::VirtualBox.new(@uuid)
-      rescue Driver::VirtualBox::VMNotFound
+        @driver = driver_class.new(@uuid)
+      rescue driver_class::VMNotFound
         # Clear the UUID since this VM doesn't exist.
         @uuid = nil
 
         # Reset the driver. This shouldn't raise a VMNotFound since we won't
         # feed it a UUID.
-        @driver = Driver::VirtualBox.new
+        @driver = driver_class.new
       end
     end
 
